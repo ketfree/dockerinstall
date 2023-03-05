@@ -19,7 +19,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 # Verifica si el servicio está en ejecución
-sudo systemctl status docker
+#sudo systemctl status docker
 
 #comrpobando que se instalo con un hello world
 resultado=$(sudo docker run hello-world)
