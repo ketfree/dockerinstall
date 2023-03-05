@@ -4,7 +4,7 @@
 sudo apt-get update
 
 # Instala los paquetes necesarios para usar el repositorio HTTPS de Docker
-sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release
+sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
 
 # Agrega la clave GPG oficial de Docker
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -16,7 +16,7 @@ echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] 
 sudo apt-get update
 
 # Instala Docker
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 
 # Verifica si el servicio está en ejecución
 #sudo systemctl status docker
