@@ -1,9 +1,11 @@
 #!/bin/bash
+apt update -y; apt upgrade -y > /dev/null 2>&1
+apt install curl -y
 
 # Definir los enlaces a los scripts en GitHub
-MENU_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/menu.sh"
-DOCKER_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/docker.sh"
-THETA_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/theta.sh"
+MENU_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/menu.sh" > /dev/null 2>&1
+DOCKER_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/docker.sh" > /dev/null 2>&1
+THETA_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/theta.sh" > /dev/null 2>&1
 
 # Descargar los tres scripts desde GitHub
 echo "Descargando el script del menú..."
@@ -17,8 +19,25 @@ curl -O $THETA_URL
 
 # Dar permisos de ejecución a los tres scripts
 echo "Otorgando permisos de ejecución a los scripts..."
-chmod +x menu.sh docker.sh theta.sh
+chmod +x menu.sh docker.sh theta.sh > /dev/null 2>&1
+
+mkdir ~/.mis_scripts > /dev/null 2>&1
+mv menu.sh docker.sh theta.sh ~/.mis_scripts/ > /dev/null 2>&1
+
+# Verificar si el archivo .bashrc existe
+if [ ! -f ~/.bashrc ]; then > /dev/null 2>&1
+    echo "El archivo .bashrc no existe. Creándolo..."
+    touch ~/.bashrc > /dev/null 2>&1
+fi
+
+# Agregar el alias al archivo .bashrc
+echo "alias menuu='~/.mis_scripts/menu.sh'" >> ~/.bashrc
+
+# Recargar el archivo .bashrc
+source ~/.bashrc > /dev/null 2>&1
 
 # Ejecutar el menú
 echo "Ejecutando el menú de instalación..."
-./menu.sh
+source ~/.bashrc
+
+menu > /dev/null 2>&1
