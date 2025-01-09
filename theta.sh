@@ -6,8 +6,15 @@ if ! command -v docker &> /dev/null; then > /dev/null 2>&1
     exit 1
 fi
 
-# Solicitar la contraseña para la instalación (la contraseña será visible mientras se escribe)
-read -p "Por favor, ingresa tu contraseña: " EDGELAUNCHER_PASSWORD
+# Solicitar la contraseña y volver a pedirla si está vacía
+while true; do
+    read -p "Por favor, ingresa tu contraseña: " EDGELAUNCHER_PASSWORD
+    if [ -z "$EDGELAUNCHER_PASSWORD" ]; then
+        echo "La contraseña no puede estar vacía. Inténtalo nuevamente."
+    else
+        break
+    fi
+done
 echo
 
 # Descargar la imagen de Docker con una barra de carga
