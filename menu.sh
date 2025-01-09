@@ -35,16 +35,18 @@ menu() {
     case "$opcion" in
         1)
             echo -e "${Green}Instalando Docker...${NC}"
-            # Llama a la función para instalar Docker aquí
-            # ./docker.sh
+            # Ejecutar el script de Docker
+            ~/.mis_scripts/docker.sh
             ;;
         2)
             echo -e "${Green}Instalando Theta Edge Node...${NC}"
-            # ./theta.sh
+            # Ejecutar el script de Theta Edge Node
+            ~/.mis_scripts/theta.sh
             ;;
         3)
             echo -e "${Green}Subiendo la key wallet...${NC}"
-            # ./file.sh
+            # Ejecutar el script para subir la key wallet
+            ~/.mis_scripts/file.sh
             ;;
         0)
             echo -e "${Red}Saliendo...${NC}"
