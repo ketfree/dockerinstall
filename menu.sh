@@ -13,12 +13,12 @@ White='\033[1;37m'
 # Función para mostrar el menú
 menu() {
     clear  # Limpiar la pantalla antes de mostrar el menú
-    echo  "\033[0;36m
-──────▄▀▄─────▄▀▄
+    echo -e "\033[0;36m
+      ▄▀▄─────▄▀▄
 ─────▄█░░▀▀▀▀▀░░█▄
 ─▄▄──█░░░░░░░░░░░█──▄▄
-█▄▄█─█░░▀░░┬░░▀░░█─█▄▄█
- \033[0m"
+█▄▄█─█░░▀░░┬░░▀░░█─█▄▄█\033[0m"
+
     echo -e "\033[0;32m#############################"
     echo -e "\033[0;32m#\033[0m \033[0;34mMenú de Instalación \033[0m"
     echo -e "\033[0;32m############################# \033[0m"
@@ -26,6 +26,7 @@ menu() {
     echo -e "\033[0;36m1. \033[0m Instalar Docker \033[0m"
     echo -e "\033[0;36m2. \033[0m Instalar Theta Edge Node \033[0m"
     echo -e "\033[0;36m3. \033[0m Subir la key wallet \033[0m"
+    echo -e "\033[0;36m4. \033[0m ver contenedores \033[0m"
     echo -e "\033[0;36m0. \033[0m Salir \033[0m"
     echo -e "\033[1;33m***************************** \033[0m"
     
@@ -44,6 +45,11 @@ menu() {
             # Llama al script de subida del archivo
             ~/.mis_scripts/file.sh
             ;;
+        4)
+            echo -e "${Green}Ejecutando docker ps...${NC}"
+            # Ejecutar el comando docker ps
+            docker ps
+            ;;
         0)
             echo -e "${Yellow}Saliendo...${NC}"
             exit 0  # Termina el script
@@ -56,5 +62,9 @@ menu() {
     read -p "Presiona Enter para continuar..." dummy
 }
 
+#~/.mis_scripts/menu.sh
+
 # Mostrar el menú
-menu
+while true; do
+    menu
+done
