@@ -1,5 +1,4 @@
 #!/bin/bash
-clear
 
 # Función para mostrar el menú
 menu() {
