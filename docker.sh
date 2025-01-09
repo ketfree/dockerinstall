@@ -1,25 +1,58 @@
 #!/bin/bash
 
-# Actualiza los repositorios de apt-get
-sudo apt-get update
+# Función para mostrar el spinner mientras se ejecuta un comando en segundo plano
+spinner() {
+    local pid=$! # Captura el PID del último comando ejecutado en segundo plano
+    local delay=0.1
+    local spinstr='|/-\'
+    while ps -p $pid > /dev/null; do
+        local temp=${spinstr#?}
+        printf " [%c]  " "$spinstr"
+        spinstr=$temp${spinstr%"$temp"}
+        sleep $delay
+        printf "\b\b\b\b\b\b"
+    done
+    echo "     " # Limpia la línea después de terminar
+}
 
-# Instala los paquetes necesarios para usar el repositorio HTTPS de Docker
-sudo apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+# Limpiar la pantalla antes de comenzar
+clear
 
-# Agrega la clave GPG oficial de Docker
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+# Actualizar el sistema
+echo "Actualizando repositorios y paquetes del sistema..."
+(sudo apt-get update -y > /dev/null 2>&1 && sudo apt-get upgrade -y > /dev/null 2>&1) & spinner
+echo "✔ Sistema actualizado correctamente."
 
-# Agrega el repositorio de Docker al sistema
-echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Instalar los paquetes necesarios para usar el repositorio HTTPS de Docker
+echo "Instalando paquetes necesarios para Docker..."
+(sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release > /dev/null 2>&1) & spinner
+echo "✔ Paquetes necesarios instalados."
 
-# Actualiza los repositorios de apt-get para incluir el repositorio de Docker
-sudo apt-get update
+# Agregar la clave GPG oficial de Docker
+echo "Agregando la clave GPG de Docker..."
+(curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg > /dev/null 2>&1) & spinner
+echo "✔ Clave GPG de Docker agregada."
 
-# Instala Docker
-sudo apt-get install docker-ce docker-ce-cli containerd.io -y
+# Agregar el repositorio de Docker al sistema
+echo "Agregando el repositorio de Docker al sistema..."
+(
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" |
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null &&
+    sudo apt-get update > /dev/null 2>&1
+) & spinner
+echo "✔ Repositorio de Docker agregado."
 
-# Verifica si el servicio está en ejecución
-#sudo systemctl status docker
+# Instalar Docker
+echo "Instalando Docker..."
+(sudo apt-get install -y docker-ce docker-ce-cli containerd.io > /dev/null 2>&1) & spinner
+echo "✔ Docker instalado correctamente."
 
-#comrpobando que se instalo con un hello world
-resultado=$(sudo docker run hello-world)
+# Verificar la instalación de Docker con un contenedor de prueba
+echo "Verificando la instalación de Docker..."
+(sudo docker run hello-world > /dev/null 2>&1) & spinner
+
+if [ $? -eq 0 ]; then
+    echo "✔ Docker se instaló y verificó exitosamente."
+else
+    echo "✘ Hubo un problema al verificar la instalación de Docker."
+fi
