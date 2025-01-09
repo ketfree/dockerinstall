@@ -13,3 +13,4 @@ menu() {
         *) echo "Opción inválida";;
     esac
 }
+menu
