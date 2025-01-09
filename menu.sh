@@ -19,46 +19,44 @@ decoracion="
 
 # Función para mostrar el menú
 menu() {
-    while true; do  # Bucle infinito para que el menú se repita
-        clear  # Limpiar la pantalla antes de mostrar el menú
-        echo -e "$decoracion"
-        echo -e "${Green}#############################"
-        echo -e "${Green}#  ${Blue}Menú de Instalación${Green}  #"
-        echo -e "${Green}#############################${NC}"
-        echo -e "${Yellow}Selecciona una opción:${NC}"
-        echo -e "${Cyan}1. ${White}Instalar Docker${NC}"
-        echo -e "${Cyan}2. ${White}Instalar Theta Edge Node${NC}"
-        echo -e "${Cyan}3. ${White}Subir la key wallet${NC}"
-        echo -e "${Cyan}0. ${White}Salir${NC}"
-        echo -e "${Yellow}*****************************${NC}"
-        
-        read -p "Opción: " opcion
-        case $opcion in
-            1)
-                echo -e "${Green}Instalando Docker...${NC}"
-                # Llama a la función para instalar Docker aquí, por ejemplo:
-                # ./docker.sh
-                ;;
-            2)
-                echo -e "${Green}Instalando Theta Edge Node...${NC}"
-                # ./theta.sh
-                ;;
-            3)
-                echo -e "${Green}Subiendo la key wallet...${NC}"
-                # ./file.sh
-                ;;
-            0)
-                echo -e "${Yellow}Saliendo...${NC}"
-                break  # Sale del bucle y termina el script
-                ;;
-            *)
-                echo -e "${Red}Opción inválida${NC}"
-                ;;
-        esac
-        # Esperar antes de mostrar nuevamente el menú
-        read -p "Presiona Enter para continuar..." dummy
-    done
+    clear  # Limpiar la pantalla antes de mostrar el menú
+    echo -e "$decoracion"
+    echo -e "${Green}#############################"
+    echo -e "${Green}#  ${Blue}Menú de Instalación${Green}  #"
+    echo -e "${Green}#############################${NC}"
+    echo -e "${Yellow}Selecciona una opción:${NC}"
+    echo -e "${Cyan}1. ${White}Instalar Docker${NC}"
+    echo -e "${Cyan}2. ${White}Instalar Theta Edge Node${NC}"
+    echo -e "${Cyan}3. ${White}Subir la key wallet${NC}"
+    echo -e "${Cyan}0. ${White}Salir${NC}"
+    echo -e "${Yellow}*****************************${NC}"
+    
+    read -p "Opción: " opcion
+    case "$opcion" in
+        1)
+            echo -e "${Green}Instalando Docker...${NC}"
+            # Llama a la función para instalar Docker aquí
+            # ./docker.sh
+            ;;
+        2)
+            echo -e "${Green}Instalando Theta Edge Node...${NC}"
+            # ./theta.sh
+            ;;
+        3)
+            echo -e "${Green}Subiendo la key wallet...${NC}"
+            # ./file.sh
+            ;;
+        0)
+            echo -e "${Red}Saliendo...${NC}"
+            exit 0
+            ;;
+        *)
+            echo -e "${Red}Opción inválida, por favor selecciona una opción válida.${NC}"
+            ;;
+    esac
 }
 
-# Mostrar el menú
-menu
+# Bucle principal para mantener el menú activo hasta que el usuario elija salir
+while true; do
+    menu
+done
