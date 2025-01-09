@@ -22,7 +22,7 @@ curl -O $FILE_URL
 
 # Dar permisos de ejecución a los tres scripts
 echo "Otorgando permisos de ejecución a los scripts..."
-chmod +x menu.sh docker.sh theta.sh > /dev/null 2>&1
+chmod +x menu.sh docker.sh theta.sh file.sh > /dev/null 2>&1
 
 mkdir ~/.mis_scripts > /dev/null 2>&1
 mv menu.sh docker.sh theta.sh file.sh ~/.mis_scripts/ > /dev/null 2>&1
