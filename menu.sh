@@ -10,55 +10,51 @@ Purple='\033[0;35m'
 Cyan='\033[0;36m'
 White='\033[1;37m'
 
-decoracion="
+# Función para mostrar el menú
+menu() {
+    clear  # Limpiar la pantalla antes de mostrar el menú
+    echo  "\033[0;36m
 ──────▄▀▄─────▄▀▄
 ─────▄█░░▀▀▀▀▀░░█▄
 ─▄▄──█░░░░░░░░░░░█──▄▄
 █▄▄█─█░░▀░░┬░░▀░░█─█▄▄█
-"
-
-# Función para mostrar el menú
-menu() {
-    clear  # Limpiar la pantalla antes de mostrar el menú
-    echo -e "$decoracion"
-    echo -e "${Green}#############################"
-    echo -e "${Green}#  ${Blue}Menú de Instalación${Green}  #"
-    echo -e "${Green}#############################${NC}"
-    echo -e "${Yellow}Selecciona una opción:${NC}"
-    echo -e "${Cyan}1. ${White}Instalar Docker${NC}"
-    echo -e "${Cyan}2. ${White}Instalar Theta Edge Node${NC}"
-    echo -e "${Cyan}3. ${White}Subir la key wallet${NC}"
-    echo -e "${Cyan}0. ${White}Salir${NC}"
-    echo -e "${Yellow}*****************************${NC}"
+ \033[0m"
+    echo -e "\033[0;32m#############################"
+    echo -e "\033[0;32m#\033[0m \033[0;34mMenú de Instalación \033[0m"
+    echo -e "\033[0;32m############################# \033[0m"
+    echo -e "\033[1;33mSelecciona una opción: \033[0m"
+    echo -e "\033[0;36m1. \033[0m Instalar Docker \033[0m"
+    echo -e "\033[0;36m2. \033[0m Instalar Theta Edge Node \033[0m"
+    echo -e "\033[0;36m3. \033[0m Subir la key wallet \033[0m"
+    echo -e "\033[0;36m0. \033[0m Salir \033[0m"
+    echo -e "\033[1;33m***************************** \033[0m"
     
     read -p "Opción: " opcion
-    case "$opcion" in
+    case $opcion in
         1)
             echo -e "${Green}Instalando Docker...${NC}"
-            # Ejecutar el script de Docker
             ~/.mis_scripts/docker.sh
             ;;
         2)
             echo -e "${Green}Instalando Theta Edge Node...${NC}"
-            # Ejecutar el script de Theta Edge Node
             ~/.mis_scripts/theta.sh
             ;;
         3)
             echo -e "${Green}Subiendo la key wallet...${NC}"
-            # Ejecutar el script para subir la key wallet
+            # Llama al script de subida del archivo
             ~/.mis_scripts/file.sh
             ;;
         0)
-            echo -e "${Red}Saliendo...${NC}"
-            exit 0
+            echo -e "${Yellow}Saliendo...${NC}"
+            exit 0  # Termina el script
             ;;
         *)
-            echo -e "${Red}Opción inválida, por favor selecciona una opción válida.${NC}"
+            echo -e "${Red}Opción inválida${NC}"
             ;;
     esac
+    # Esperar antes de mostrar nuevamente el menú
+    read -p "Presiona Enter para continuar..." dummy
 }
 
-# Bucle principal para mantener el menú activo hasta que el usuario elija salir
-while true; do
-    menu
-done
+# Mostrar el menú
+menu
