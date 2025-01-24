@@ -65,7 +65,7 @@ upload_file() {
         echo -e "${Green}Archivos existentes eliminados.${NC}"
     else
         echo -e "${Red}Error al eliminar archivos existentes.${NC}"
-        return 1
+        return
     fi
 
     # Selección de archivo
@@ -89,7 +89,7 @@ upload_file() {
         SERVER_IP=$(curl -s ifconfig.me)
         if [ -z "$SERVER_IP" ]; then
             echo -e "${Red}No se pudo detectar la IP pública. Verifica tu conexión a Internet.${NC}"
-            return 1
+            return
         fi
         # Generar el enlace de descarga
         FILE_NAME=$(basename "$SELECTED_FILE")
@@ -97,7 +97,6 @@ upload_file() {
         echo -e "${Cyan}Enlace de descarga: ${DOWNLOAD_LINK}${NC}"
     else
         echo -e "${Red}Error al copiar el archivo. Asegúrate de tener permisos suficientes.${NC}"
-        return 1
     fi
 }
 
@@ -107,7 +106,7 @@ delete_file() {
     FILES=("$PUBLIC_PATH"/*)
     if [ ${#FILES[@]} -eq 0 ]; then
         echo -e "${Yellow}No hay archivos subidos para eliminar.${NC}"
-        return 1
+        return
     fi
 
     # Mostrar archivos en lista numerada
