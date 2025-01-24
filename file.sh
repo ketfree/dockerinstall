@@ -12,6 +12,26 @@ ORIGIN_DIR="$HOME/.edgelauncher/edgeencoder/key/encrypted"
 # Ruta fija para el directorio público
 PUBLIC_PATH="/var/www/html/uploads"
 
+# Función para verificar si Nginx está instalado
+check_nginx() {
+    if ! command -v nginx &> /dev/null; then
+        echo -e "${Yellow}Nginx no está instalado. Instalando...${NC}"
+        sudo apt update
+        sudo apt install -y nginx
+        if [ $? -eq 0 ]; then
+            echo -e "${Green}Nginx instalado correctamente.${NC}"
+            sudo systemctl enable nginx
+            sudo systemctl start nginx
+        else
+            echo -e "${Red}Error al instalar Nginx. Por favor, verifica tu conexión a Internet.${NC}"
+            exit 1
+        fi
+    else
+        echo -e "${Green}Nginx ya está instalado.${NC}"
+        sudo systemctl start nginx
+    fi
+}
+
 # Función para verificar la existencia de la ruta pública
 check_public_path() {
     if [ ! -d "$PUBLIC_PATH" ]; then
@@ -137,15 +157,18 @@ while true; do
 
     case $OPTION in
         1)
+            check_nginx
             check_public_path
             list_files
             upload_file
             ;;
         2)
+            check_nginx
             check_public_path
             list_uploaded_files
             ;;
         3)
+            check_nginx
             check_public_path
             delete_file
             ;;
