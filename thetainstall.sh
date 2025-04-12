@@ -7,6 +7,8 @@ MENU_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/mai
 DOCKER_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/docker.sh" > /dev/null 2>&1
 THETA_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/theta.sh" > /dev/null 2>&1
 FILE_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/file.sh"
+FILE2_URL="https://raw.githubusercontent.com/ketfree/dockerinstall/refs/heads/main/file2.sh"
+
 # Descargar los tres scripts desde GitHub
 echo "Descargando el script del menú..."
 curl -O $MENU_URL
@@ -17,15 +19,18 @@ curl -O $DOCKER_URL
 echo "Descargando el script para instalar Theta Edge Node..."
 curl -O $THETA_URL
 
-echo "Descargando el script para instalar file..."
+echo "Descargando el script para subir file nginx..."
 curl -O $FILE_URL
+
+echo "Descargando el script para instalar file..."
+curl -O $FILE2_URL
 
 # Dar permisos de ejecución a los tres scripts
 echo "Otorgando permisos de ejecución a los scripts..."
-chmod +x menu.sh docker.sh theta.sh file.sh > /dev/null 2>&1
+chmod +x menu.sh docker.sh theta.sh file.sh file2.sh > /dev/null 2>&1
 
 mkdir ~/.mis_scripts > /dev/null 2>&1
-mv menu.sh docker.sh theta.sh file.sh ~/.mis_scripts/ > /dev/null 2>&1
+mv menu.sh docker.sh theta.sh file.sh file2.sh  ~/.mis_scripts/ > /dev/null 2>&1
 
 # Verificar si el archivo .bashrc existe
 if [ ! -f ~/.bashrc ]; then > /dev/null 2>&1
