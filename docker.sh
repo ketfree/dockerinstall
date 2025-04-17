@@ -1,42 +1,58 @@
 #!/bin/bash
-# Limpiar la pantalla antes de comenzar
+
+# Limpiar la pantalla
 clear
 
-# Actualizar el sistema
-echo "Actualizando repositorios y paquetes del sistema..."
-(sudo apt-get update -y > /dev/null 2>&1 && sudo apt-get upgrade -y > /dev/null 2>&1)
-echo "✔ Sistema actualizado correctamente."
+# Verificar si se ejecuta como root
+if [[ $EUID -ne 0 ]]; then
+    echo "Este script debe ejecutarse como root o con sudo."
+    exit 1
+fi
 
-# Instalar los paquetes necesarios para usar el repositorio HTTPS de Docker
-echo "Instalando paquetes necesarios para Docker..."
-(sudo apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release > /dev/null 2>&1)
+echo "========== Instalación de Docker =========="
+
+# Actualizar sistema
+echo "Actualizando repositorios y paquetes..."
+apt-get update -y > /dev/null && apt-get upgrade -y > /dev/null
+echo "✔ Sistema actualizado."
+
+# Eliminar versiones antiguas de Docker (si existen)
+echo "Eliminando versiones antiguas de Docker (si las hay)..."
+apt-get remove -y docker docker-engine docker.io containerd runc > /dev/null 2>&1
+
+# Instalar dependencias necesarias
+echo "Instalando paquetes necesarios..."
+apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release > /dev/null
 echo "✔ Paquetes necesarios instalados."
 
-# Agregar la clave GPG oficial de Docker
-echo "Agregando la clave GPG de Docker..."
-(curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg > /dev/null 2>&1)
-echo "✔ Clave GPG de Docker agregada."
+# Agregar la clave GPG de Docker
+echo "Agregando la clave GPG oficial de Docker..."
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
-# Agregar el repositorio de Docker al sistema
-echo "Agregando el repositorio de Docker al sistema..."
-(
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" |
-    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null &&
-    sudo apt-get update > /dev/null 2>&1
-) & spinner
-echo "✔ Repositorio de Docker agregado."
+# Agregar repositorio oficial de Docker
+echo "Agregando repositorio de Docker..."
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+  https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  > /etc/apt/sources.list.d/docker.list
 
-# Instalar Docker
-echo "Instalando Docker..."
-(sudo apt-get install -y docker-ce docker-ce-cli containerd.io > /dev/null 2>&1)
-echo "✔ Docker instalado correctamente."
+# Actualizar repositorios con Docker incluido
+apt-get update -y > /dev/null
 
-# Verificar la instalación de Docker con un contenedor de prueba
-echo "Verificando la instalación de Docker..."
-(sudo docker run hello-world > /dev/null 2>&1)
+# Instalar Docker Engine
+echo "Instalando Docker Engine..."
+apt-get install -y docker-ce docker-ce-cli containerd.io > /dev/null
+echo "✔ Docker instalado."
 
-if [ $? -eq 0 ]; then
-    echo "✔ Docker se instaló y verificó exitosamente."
+# Habilitar e iniciar Docker
+systemctl enable docker
+systemctl start docker
+
+# Verificar la instalación con contenedor hello-world
+echo "Verificando instalación de Docker..."
+if docker run --rm hello-world > /dev/null 2>&1; then
+    echo "✔ Docker se instaló y verificó correctamente."
 else
-    echo "✘ Hubo un problema al verificar la instalación de Docker."
+    echo "✘ Error al verificar Docker. Revisa la instalación manualmente."
+    exit 1
 fi
